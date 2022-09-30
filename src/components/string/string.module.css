@@ -1,0 +1,10 @@
+.input__container {
+  display: flex;
+  justify-content: space-around;
+  width: 522px;
+}
+
+.letters__container {
+  display: flex;
+  gap: 10px;
+}
