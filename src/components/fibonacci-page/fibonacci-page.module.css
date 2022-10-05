@@ -1,0 +1,15 @@
+.input__container {
+  display: flex;
+  width: 522px;
+  margin: auto;
+  gap: 12px;
+}
+
+.circles__container {
+  display: flex;
+  gap: 10px;
+  width: 522px;
+  margin: auto;
+  margin-top: 50px;
+  justify-content: center;
+}
