@@ -1,10 +1,15 @@
 .input__container {
   display: flex;
-  justify-content: space-around;
   width: 522px;
+  margin: auto;
+  gap: 12px;
 }
 
 .letters__container {
   display: flex;
   gap: 10px;
+  width: 522px;
+  margin: auto;
+  margin-top: 120px;
+  justify-content: center;
 }
