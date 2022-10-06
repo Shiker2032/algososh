@@ -1,0 +1,12 @@
+.input__container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.columns__container {
+  display: flex;
+  gap: 10px;
+  margin-top: 48px;
+  align-items: baseline;
+}
