@@ -10,64 +10,38 @@ import styles from "./sorting-page.module.css";
 
 export const SortingPage: React.FC = () => {
   const [data, setData] = useState([1, 5, 54, 30, 10, 3]);
-  let time = 1000;
+  let time = 500;
 
-  // const bubbleSortAsc = (arr) => {
-  //   for (let i = 0; i < arr.length; i++) {
-  //     for (let j = 0; j < arr.length; j++) {
-  //       if (arr[i] < arr[j]) {
-  //         time += 1000;
-  //         setTimeout(() => {
-  //           [arr[i], arr[j]] = [arr[j], arr[i]];
-  //           setData([...arr]);
-  //         }, time);
-  //       }
-  //     }
-  //   }
-  // };
-
-  // const bubbleSortDesc = (arr) => {
-  //   for (let i = 0; i < arr.length; i++) {
-  //     for (let j = 0; j < arr.length; j++) {
-  //       if (arr[i] > arr[j]) {
-  //         time += 1000;
-  //         setTimeout(() => {
-  //           [arr[i], arr[j]] = [arr[j], arr[i]];
-  //           setData([...arr]);
-  //         }, time);
-  //       }
-  //     }
-  //   }
-  // };
-
-  const selectionSortAsc = (arr: number[]): number[] => {
-    for (let i = 0; i < arr.length - 1; i++) {
-      let minIdx = i;
-      for (let j = i + 1; j < arr.length; j++) {
-        if (arr[minIdx] > arr[j]) {
-          time += 1000;
-          setTimeout(() => {
-            minIdx = j;
-            [arr[minIdx], arr[i]] = [arr[i], arr[minIdx]];
-            setData([...arr]);
-          }, time);
-        }
+  const bubbleSort = (arr, type) => {
+    for (let i = 0; i < arr.length; i++) {
+      time += 500;
+      for (let j = 0; j < arr.length; j++) {
+        setTimeout(() => {
+          bubbleswap(arr, i, j, type);
+        }, time);
       }
     }
-    return arr;
   };
 
-  const selectionSortDesc = (arr: number[]): number[] => {
+  function bubbleSwap(arr, i, j, type) {
+    if (type === "asc" ? arr[i] < arr[j] : arr[i] > arr[j]) {
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      setData([...arr]);
+    }
+  }
+
+  const selectionSort = (arr: number[], sortingType): number[] => {
     for (let i = 0; i < arr.length - 1; i++) {
       time += 500;
-      selectionSort(arr, i);
+      selectionSwap(arr, i, sortingType);
     }
 
-    function selectionSort(arr, i) {
+    function selectionSwap(arr, i, sortingType) {
       setTimeout(() => {
         let maxIdx = i;
+
         for (let j = i + 1; j < arr.length; j++) {
-          if (arr[maxIdx] < arr[j]) {
+          if (sortingType === "asc" ? arr[maxIdx] > arr[j] : arr[maxIdx] < arr[j]) {
             maxIdx = j;
           }
         }
@@ -83,8 +57,18 @@ export const SortingPage: React.FC = () => {
       <div className={styles.input__container}>
         <RadioInput label="Пузырьком" />
         <RadioInput label="Выбором" />
-        <Button text="По убыванию" onClick={() => selectionSortDesc(data)} />
-        <Button text="По возрастанию" onClick={() => selectionSortAsc(data)} />
+        <Button
+          text="По возрастанию"
+          onClick={() => {
+            bubbleSort(data, "asc");
+          }}
+        />
+        <Button
+          text="По убыванию"
+          onClick={() => {
+            bubbleSort(data, "desc");
+          }}
+        />
         <Button text="Новый массив" />
       </div>
       <div className={styles.columns__container}>
