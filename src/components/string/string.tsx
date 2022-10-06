@@ -14,7 +14,7 @@ export const StringComponent: React.FC = () => {
 
   const handleInput = (evt) => {
     setValue(evt.target.value);
-    if (value > 0) {
+    if (value >= 0) {
       setDisableBtn(false);
     } else {
       setDisableBtn(true);
@@ -55,10 +55,6 @@ export const StringComponent: React.FC = () => {
         arr[i1].state = ElementStates.Modified;
         arr[i2].state = ElementStates.Modified;
         setStringArr([...arr]);
-
-        if (i1 === i2 - 1) {
-          setisLoading(false);
-        }
       }, time + 1000);
     };
   };
