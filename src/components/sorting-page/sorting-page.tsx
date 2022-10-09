@@ -9,27 +9,29 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./sorting-page.module.css";
 
 export const SortingPage: React.FC = () => {
-  const [data, setData] = useState([1, 5, 54, 30, 10, 3]);
-  let time = 500;
+  const [data, setData] = useState([1, 5, 54, 30, 10, 3, 33, 20, 11, 13, 6]);
+  let time = 1000;
 
   const bubbleSort = (arr, type) => {
     for (let i = 0; i < arr.length; i++) {
-      time += 500;
+      time += 1000;
       for (let j = 0; j < arr.length; j++) {
         setTimeout(() => {
-          bubbleswap(arr, i, j, type);
+          bubbleSwap(arr, i, j, type);
         }, time);
       }
     }
   };
 
   function bubbleSwap(arr, i, j, type) {
-    if (type === "asc" ? arr[i] < arr[j] : arr[i] > arr[j]) {
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-      setData([...arr]);
-    }
+    setTimeout(() => {
+      if (type === "asc" ? arr[i] < arr[j] : arr[i] > arr[j]) {
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+        setData([...arr]);
+      }
+    }, time);
   }
-
+  //Функция универсальная
   const selectionSort = (arr: number[], sortingType): number[] => {
     for (let i = 0; i < arr.length - 1; i++) {
       time += 500;
