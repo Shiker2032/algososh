@@ -12,7 +12,15 @@ class Queue<T> implements IQueue<T> {
   constructor() {
     this._oldestIndex = 0;
     this._newestIndex = 0;
-    this._storage = ["", "", "", "", "", ""];
+    this._storage = [
+      { value: "", state: ElementStates.Default },
+      { value: "", state: ElementStates.Default },
+      { value: "", state: ElementStates.Default },
+      { value: "", state: ElementStates.Default },
+      { value: "", state: ElementStates.Default },
+      { value: "", state: ElementStates.Default },
+      { value: "", state: ElementStates.Default },
+    ];
   }
 
   size = () => {
@@ -20,7 +28,7 @@ class Queue<T> implements IQueue<T> {
   };
 
   enqueue = (data) => {
-    this._storage[this._newestIndex] = data;
+    this._storage[this._newestIndex].value = data;
     this._newestIndex++;
   };
 
@@ -31,7 +39,7 @@ class Queue<T> implements IQueue<T> {
 
     if (oldestIndex !== newestIndex) {
       deletedData = this._storage[oldestIndex];
-      delete this._storage[oldestIndex];
+      this._storage[oldestIndex] = { value: "", state: ElementStates.Default };
       this._oldestIndex++;
 
       return deletedData;
@@ -44,6 +52,10 @@ export const QueuePage = () => {
   const [input, setInput] = useState("");
   const [color, setColor] = useState(false);
 
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   const queue = React.useMemo(() => {
     return new Queue<string>();
   }, []);
@@ -53,29 +65,23 @@ export const QueuePage = () => {
   };
 
   //Добавление
-  const handleAdd = () => {
+  const handleAdd = async () => {
     queue.enqueue(input);
-    setTimeout(() => {
-      setColor(ElementStates.Changing);
-      setData([...queue._storage]);
-      setTimeout(() => {
-        setColor(ElementStates.Default);
-        setData([...queue._storage]);
-      }, 500);
-    }, 500);
+    queue._storage[queue._newestIndex - 1].state = ElementStates.Changing;
+    setData([...queue._storage]);
+    await sleep(500);
+    queue._storage[queue._newestIndex - 1].state = ElementStates.Default;
+    setData([...queue._storage]);
   };
 
   //Удаление
-  const handleDelete = () => {
+  const handleDelete = async () => {
     queue.dequeue();
-    setTimeout(() => {
-      setColor(ElementStates.Changing);
-      setData([...queue._storage]);
-      setTimeout(() => {
-        setColor(ElementStates.Default);
-        setData([...queue._storage]);
-      }, 500);
-    }, 500);
+    queue._storage[queue._oldestIndex - 1].state = ElementStates.Changing;
+    setData([...queue._storage]);
+    await sleep(500);
+    queue._storage[queue._oldestIndex - 1].state = ElementStates.Default;
+    setData([...queue._storage]);
   };
 
   //Очистка
@@ -109,14 +115,11 @@ export const QueuePage = () => {
           data.map((el, i) => {
             return (
               <Circle
-                letter={el}
+                letter={el.value}
                 key={i}
                 head={i === queue._oldestIndex ? "head" : ""}
                 tail={i + 1 === queue._newestIndex ? "tail" : ""}
-                state={
-                  (i + 1 === queue._newestIndex ? color : ElementStates.Default) ||
-                  (i === queue._oldestIndex ? color : ElementStates.Default)
-                }
+                state={el.state}
                 index={i}
               />
             );
