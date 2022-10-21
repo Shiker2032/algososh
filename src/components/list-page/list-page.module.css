@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 829px;
+  margin: 0 auto;
+}
+
+.input {
+  display: flex;
+  gap: 12px;
+}
+
+.input input {
+  width: 260px;
+}
+
+.input button {
+  width: 100%;
+}
+
+.stack_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+  gap: 16px;
+}
+
+.circles__container {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stack_top {
+  position: absolute;
+  top: -65px;
+  left: 13px;
+  padding: 0;
+}
+
+.stack_bottom {
+  position: absolute;
+  top: 125px;
+  left: 10px;
+}
