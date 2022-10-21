@@ -87,7 +87,7 @@ export const StringComponent: React.FC = () => {
           isLoader={isLoading}
         />
       </div>
-      <div className={styles.letters__container}>
+      <div className={styles.circles__container}>
         {displayArr.length > 0 &&
           displayArr.map((el, i) => {
             return <Circle state={el?.state} letter={el?.letter} key={i} />;

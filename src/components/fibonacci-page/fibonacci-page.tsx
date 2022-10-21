@@ -1,6 +1,5 @@
-//@ts-nocheck
-
 import React, { useState } from "react";
+import { sleep } from "../../utils/utils";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
@@ -8,44 +7,41 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 
 import styles from "./fibonacci-page.module.css";
 export const FibonacciPage: React.FC = () => {
-  const [stringArr, setStringArr] = useState([]);
-  const [disableBtn, setDisableBtn] = useState(false);
-  const [value, setValue] = useState("");
+  const [sequenceArr, setSequenceArr] = React.useState<number[]>([]);
+  const [disableBtn, setDisableBtn] = useState(true);
+  const [value, setValue] = React.useState<number | undefined>();
   const [isLoading, setisLoading] = useState(false);
 
-  const handleInput = (evt) => {
-    setValue(evt.target.value);
+  const handleInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    const value = evt.target.value.trim();
+
+    if (value && !isNaN(value as unknown as number)) {
+      setDisableBtn(false);
+      setValue(Number(value));
+    } else {
+      setDisableBtn(true);
+    }
   };
 
-  const handleClick = () => {
-    let start = 0;
-    let end = value;
+  const fibSequence = async (n: number) => {
+    let arr = [1, 1];
     let time = 500;
-    const arr = [];
-    setStringArr([]);
-    setTimeout(() => {
-      while (start <= end) {
-        arr.push(fib(start + 1));
-        start++;
-        time += 500;
-      }
-    }, 500);
+    setisLoading(true);
 
-    const fib = (n) => {
-      let arr = [0, 1];
-      for (let i = 2; i < n + 1; i++) {
-        arr.push(arr[i - 2] + arr[i - 1]);
+    for (let i = 2; i <= n; i++) {
+      arr.push(arr[i - 2] + arr[i - 1]);
+      setSequenceArr([...arr]);
+      if (i === n) {
+        setisLoading(false);
       }
-      setTimeout(() => {
-        setStringArr([...arr.splice(1)]);
-      }, time);
-    };
+      await sleep(time);
+    }
   };
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
       <div className={styles.input__container}>
         <Input
-          onInput={(evt) => handleInput(evt)}
+          onInput={(evt: React.ChangeEvent<HTMLInputElement>) => handleInput(evt)}
           maxLength={2}
           type={"text"}
           isLimitText={true}
@@ -53,15 +49,15 @@ export const FibonacciPage: React.FC = () => {
           id="string-input"
         />
         <Button
-          onClick={handleClick}
+          onClick={() => fibSequence(Number(value))}
           text="Развернуть"
           disabled={disableBtn}
           isLoader={isLoading}
         />
       </div>
       <div className={styles.circles__container}>
-        {stringArr.length > 0 &&
-          stringArr.map((el, i) => {
+        {sequenceArr.length > 0 &&
+          sequenceArr.map((el, i) => {
             return <Circle letter={"" + el} key={i} index={i} />;
           })}
       </div>
