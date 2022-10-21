@@ -1,4 +1,3 @@
-//@ts-nocheck
 import styles from "./string.module.css";
 import React, { useState } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
@@ -6,56 +5,67 @@ import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
+import { IString } from "../../types/string";
+
 export const StringComponent: React.FC = () => {
-  const [stringArr, setStringArr] = useState([]);
+  const [displayArr, setDisplayArr] = React.useState<IString[]>([]);
   const [disableBtn, setDisableBtn] = useState(true);
-  const [value, setValue] = useState("");
+  const [input, setInput] = React.useState("");
   const [isLoading, setisLoading] = useState(false);
 
-  const handleInput = (evt) => {
-    setValue(evt.target.value);
-    if (value >= 0) {
+  const handleInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    const value = evt.target.value.trim();
+    if (value) {
       setDisableBtn(false);
+      setInput(value);
     } else {
       setDisableBtn(true);
     }
   };
+
   const handleClick = () => {
     let start = 0;
-    let end = value.length - 1;
+    let end = input.length - 1;
     let time = 1000;
+    const outputArr: IString[] = [];
+    const inputArr = Array.from(input);
 
-    const arr = [...value];
-    setStringArr(arr);
     setisLoading(true);
-
-    arr.forEach((el, i) => {
-      arr[i] = {
+    inputArr.forEach((el, i) => {
+      const object = {
         letter: el,
         state: ElementStates.Default,
       };
+      outputArr.push(object);
     });
 
+    setDisplayArr([...outputArr]);
     setTimeout(() => {
       while (start <= end) {
-        reverse(arr, start, end, time);
+        reverse(outputArr, start, end, time);
         start++;
         end--;
         time += 1000;
       }
     }, 1000);
-    const reverse = (arr, i1, i2, time) => {
+
+    const reverse = (arr: IString[], i1: number, i2: number, time: number) => {
       setTimeout(() => {
         arr[i1].state = ElementStates.Changing;
         arr[i2].state = ElementStates.Changing;
-        setStringArr([...arr]);
+        setDisplayArr([...arr]);
       }, time);
       setTimeout(() => {
         [arr[i1], arr[i2]] = [arr[i2], arr[i1]];
         arr[i1].state = ElementStates.Modified;
         arr[i2].state = ElementStates.Modified;
-        setStringArr([...arr]);
+        setDisplayArr([...arr]);
       }, time + 1000);
+      if (i1 + 1 === i2 || i1 === i2) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, time + 1000);
+      }
     };
   };
 
@@ -63,7 +73,7 @@ export const StringComponent: React.FC = () => {
     <SolutionLayout title="Строка">
       <div className={styles.input__container}>
         <Input
-          onChange={(evt) => handleInput(evt)}
+          onChange={(evt: React.ChangeEvent<HTMLInputElement>) => handleInput(evt)}
           maxLength={11}
           type={"text"}
           isLimitText={true}
@@ -78,9 +88,9 @@ export const StringComponent: React.FC = () => {
         />
       </div>
       <div className={styles.letters__container}>
-        {stringArr.length > 0 &&
-          stringArr.map((el, i) => {
-            return <Circle state={el.state} letter={el.letter} key={i} />;
+        {displayArr.length > 0 &&
+          displayArr.map((el, i) => {
+            return <Circle state={el?.state} letter={el?.letter} key={i} />;
           })}
       </div>
     </SolutionLayout>
