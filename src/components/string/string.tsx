@@ -5,7 +5,7 @@ import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
-import { IString } from "../../types/string";
+import { IString } from "../../types/main";
 
 export const StringComponent: React.FC = () => {
   const [displayArr, setDisplayArr] = React.useState<IString[]>([]);

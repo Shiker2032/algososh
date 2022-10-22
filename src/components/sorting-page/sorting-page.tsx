@@ -1,7 +1,7 @@
-//@ts-nocheck
-
 import React, { useEffect, useState } from "react";
 import { ElementStates } from "../../types/element-states";
+import { ISort } from "../../types/main";
+import { generateRandomArray, getRandomNumber, sleep } from "../../utils/utils";
 import { Button } from "../ui/button/button";
 import { Column } from "../ui/column/column";
 import { RadioInput } from "../ui/radio-input/radio-input";
@@ -9,43 +9,49 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./sorting-page.module.css";
 
 export const SortingPage: React.FC = () => {
-  const [selectedSort, setSelectedSort] = useState("");
-  const [renderArray, setRenderArray] = useState([]);
-  let time = 100;
+  const [selectedSort, setSelectedSort] = useState("selection");
+  const [renderArray, setRenderArray] = React.useState<ISort[]>([]);
+
+  const [ascLoading, setAscLoading] = useState(false);
+  const [descDisabled, setDescDisabled] = useState(false);
+  const [descLoading, setDescLoading] = useState(false);
+  const [inputDisabled, setInputDisabled] = useState(false);
+
+  const time = 1000;
 
   useEffect(() => {
-    setRenderArray([...generateArray()]);
+    setRenderArray([...prepareArray(1, 100)]);
   }, []);
 
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  function prepareArray(min: number, max: number) {
+    const array = generateRandomArray(min, max);
+    const generatedArray: ISort[] = [];
 
-  function getRandomNumber(min, max) {
-    return Math.round(Math.random() * (max - min) + min);
-  }
-
-  function generateArray() {
-    let length = getRandomNumber(3, 19);
-    let array = Array.from({ length }, () => getRandomNumber(1, 100));
     array.map((el, i) => {
-      array[i] = {
+      const object = {
         value: el,
         state: ElementStates.Default,
       };
+      generatedArray.push(object);
     });
-    return array;
+    return generatedArray;
   }
 
-  function handleSort(data, type) {
+  function handleSort(arr: ISort[], type: string) {
     if (selectedSort === "bubble") {
-      bubbleSort(data, type);
+      bubbleSort(arr, type);
     } else {
-      selectionSortAsync(data, type);
+      selectionSortAsync(arr, type);
     }
   }
 
-  async function bubbleSort(arr, sortingType) {
+  async function bubbleSort(arr: ISort[], sortingType: string) {
+    setInputDisabled(true);
+    if (sortingType === "asc") {
+      setAscLoading(true);
+    } else {
+      setDescLoading(true);
+    }
     for (let i = 0; i < arr.length - 1; i++) {
       for (let j = 0; j < arr.length - i - 1; j++) {
         arr[j].state = ElementStates.Changing;
@@ -66,13 +72,25 @@ export const SortingPage: React.FC = () => {
       }
       arr[arr.length - 1 - i].state = ElementStates.Modified;
       setRenderArray([...arr]);
+      if (i + 1 === arr.length - 1) {
+        setInputDisabled(false);
+        setAscLoading(false);
+        setDescLoading(false);
+      }
     }
     arr[0].state = ElementStates.Modified;
     arr[arr.length - 1].state = ElementStates.Modified;
     setRenderArray([...arr]);
   }
 
-  async function selectionSortAsync(arr, sortingType) {
+  async function selectionSortAsync(arr: ISort[], sortingType: string) {
+    setInputDisabled(true);
+    if (sortingType === "asc") {
+      setAscLoading(true);
+    } else {
+      setDescLoading(true);
+    }
+
     for (let i = 0; i < arr.length; i++) {
       let minIdx = i;
       arr[i].state = ElementStates.Changing;
@@ -94,45 +112,60 @@ export const SortingPage: React.FC = () => {
       [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
       arr[i].state = ElementStates.Modified;
       setRenderArray([...arr]);
+      if (i === arr.length - 1) {
+        setInputDisabled(false);
+        setAscLoading(false);
+        setDescLoading(false);
+      }
     }
   }
 
   return (
     <SolutionLayout title="Сортировка массива">
-      <form>
+      <form className={styles.form_container}>
         <div className={styles.input__container}>
-          <RadioInput
-            name="rb"
-            onChange={(evt) => {
-              setSelectedSort("bubble");
-            }}
-            label="Пузырьком"
-          />
-          <RadioInput
-            name="rb"
-            onChange={() => {
-              setSelectedSort("selection");
-            }}
-            label="Выбором"
-          />
+          <div className={styles.input_radios}>
+            <RadioInput
+              name="rb"
+              onChange={() => setSelectedSort("selection")}
+              label="Выбором"
+              value="selection"
+              disabled={inputDisabled}
+              checked={selectedSort === "selection" ? true : false}
+            />
+            <RadioInput
+              name="rb"
+              value="bubble"
+              onChange={() => setSelectedSort("bubble")}
+              label="Пузырьком"
+              disabled={inputDisabled}
+            />
+          </div>
           <Button
             text="По возрастанию"
             onClick={() => {
-              handleSort(renderArray, "asc");
+              handleSort(renderArray as ISort[], "asc");
             }}
+            isLoader={ascLoading}
+            disabled={inputDisabled}
           />
           <Button
             text="По убыванию"
             onClick={() => {
-              handleSort(renderArray, "desc");
+              handleSort(renderArray as ISort[], "desc");
             }}
+            isLoader={descLoading}
+            disabled={inputDisabled}
           />
-          <Button
-            onClick={() => {
-              setRenderArray([...generateArray()]);
-            }}
-            text="Новый массив"
-          />
+          <div className={styles.input_generator}>
+            <Button
+              onClick={() => {
+                setRenderArray([...prepareArray(1, 100)]);
+              }}
+              text="Новый массив"
+              disabled={inputDisabled}
+            />
+          </div>
         </div>
         <div className={styles.columns__container}>
           {renderArray.length > 1 &&

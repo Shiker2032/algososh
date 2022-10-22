@@ -50,7 +50,7 @@ export const FibonacciPage: React.FC = () => {
         />
         <Button
           onClick={() => fibSequence(Number(value))}
-          text="Развернуть"
+          text="Рассчитать"
           disabled={disableBtn}
           isLoader={isLoading}
         />
