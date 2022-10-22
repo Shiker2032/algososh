@@ -9,18 +9,12 @@ import { IString } from "../../types/main";
 
 export const StringComponent: React.FC = () => {
   const [displayArr, setDisplayArr] = React.useState<IString[]>([]);
-  const [disableBtn, setDisableBtn] = useState(true);
   const [input, setInput] = React.useState("");
   const [isLoading, setisLoading] = useState(false);
 
   const handleInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const value = evt.target.value.trim();
-    if (value) {
-      setDisableBtn(false);
-      setInput(value);
-    } else {
-      setDisableBtn(true);
-    }
+    setInput(value);
   };
 
   const handleClick = () => {
@@ -30,6 +24,7 @@ export const StringComponent: React.FC = () => {
     const outputArr: IString[] = [];
     const inputArr = Array.from(input);
 
+    setInput("");
     setisLoading(true);
     inputArr.forEach((el, i) => {
       const object = {
@@ -75,15 +70,15 @@ export const StringComponent: React.FC = () => {
         <Input
           onChange={(evt: React.ChangeEvent<HTMLInputElement>) => handleInput(evt)}
           maxLength={11}
-          type={"text"}
           isLimitText={true}
           extraClass={styles.string_input}
           id="string-input"
+          value={input}
         />
         <Button
           onClick={handleClick}
           text="Развернуть"
-          disabled={disableBtn}
+          disabled={input.length > 0 ? false : true}
           isLoader={isLoading}
         />
       </div>

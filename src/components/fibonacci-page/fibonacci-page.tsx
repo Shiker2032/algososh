@@ -9,7 +9,7 @@ import styles from "./fibonacci-page.module.css";
 export const FibonacciPage: React.FC = () => {
   const [sequenceArr, setSequenceArr] = React.useState<number[]>([]);
   const [disableBtn, setDisableBtn] = useState(true);
-  const [value, setValue] = React.useState<number | undefined>();
+  const [value, setValue] = React.useState<number | string | undefined>("");
   const [isLoading, setisLoading] = useState(false);
 
   const handleInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,6 +19,9 @@ export const FibonacciPage: React.FC = () => {
       setDisableBtn(false);
       setValue(Number(value));
     } else {
+      if (value === "") {
+        setValue(value);
+      }
       setDisableBtn(true);
     }
   };
@@ -27,6 +30,7 @@ export const FibonacciPage: React.FC = () => {
     let arr = [1, 1];
     let time = 500;
     setisLoading(true);
+    setValue("");
 
     for (let i = 2; i <= n; i++) {
       arr.push(arr[i - 2] + arr[i - 1]);
@@ -47,6 +51,8 @@ export const FibonacciPage: React.FC = () => {
           isLimitText={true}
           extraClass={styles.string_input}
           id="string-input"
+          value={value}
+          placeholder="Введите число"
         />
         <Button
           onClick={() => fibSequence(Number(value))}
