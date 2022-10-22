@@ -16,3 +16,13 @@ export interface IStack<T> {
   elements: () => (T | null)[];
   clear: () => void;
 }
+
+export interface IQueue<T> {
+  enqueue: (data: string) => void;
+  dequeue: () => void;
+}
+
+export interface IQueueElement {
+  value: string;
+  state: ElementStates;
+}

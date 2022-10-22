@@ -1,7 +1,8 @@
-//@ts-nocheck
-
 import React, { useEffect, useState } from "react";
 import { ElementStates } from "../../types/element-states";
+import { IQueueElement, IQueue } from "../../types/main";
+import { sleep } from "../../utils/utils";
+
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
@@ -9,38 +10,29 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./queue-page.module.css";
 
 class Queue<T> implements IQueue<T> {
+  public oldestIndex: number;
+  public newestIndex: number;
+  public storage: IQueueElement[];
   constructor() {
-    this._oldestIndex = 0;
-    this._newestIndex = 0;
-    this._storage = [
-      { value: "", state: ElementStates.Default },
-      { value: "", state: ElementStates.Default },
-      { value: "", state: ElementStates.Default },
-      { value: "", state: ElementStates.Default },
-      { value: "", state: ElementStates.Default },
-      { value: "", state: ElementStates.Default },
-      { value: "", state: ElementStates.Default },
-    ];
+    this.oldestIndex = 0;
+    this.newestIndex = 0;
+    this.storage = [];
   }
 
-  size = () => {
-    return this._newestIndex - this._oldestIndex;
-  };
-
-  enqueue = (data) => {
-    this._storage[this._newestIndex].value = data;
-    this._newestIndex++;
+  enqueue = (data: string) => {
+    this.storage[this.newestIndex].value = data;
+    this.newestIndex++;
   };
 
   dequeue = () => {
-    var oldestIndex = this._oldestIndex,
-      newestIndex = this._newestIndex,
+    var oldestIndex = this.oldestIndex,
+      newestIndex = this.newestIndex,
       deletedData;
 
     if (oldestIndex !== newestIndex) {
-      deletedData = this._storage[oldestIndex];
-      this._storage[oldestIndex] = { value: "", state: ElementStates.Default };
-      this._oldestIndex++;
+      deletedData = this.storage[oldestIndex];
+      this.storage[oldestIndex] = { value: "", state: ElementStates.Default };
+      this.oldestIndex++;
 
       return deletedData;
     }
@@ -48,50 +40,76 @@ class Queue<T> implements IQueue<T> {
 }
 
 export const QueuePage = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = React.useState<IQueueElement[]>([]);
   const [input, setInput] = useState("");
-  const [color, setColor] = useState(false);
+  const [deleteDisabled, setDeleteDisabled] = useState(true);
 
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+  const initialData = [
+    { value: "", state: ElementStates.Default },
+    { value: "", state: ElementStates.Default },
+    { value: "", state: ElementStates.Default },
+    { value: "", state: ElementStates.Default },
+    { value: "", state: ElementStates.Default },
+    { value: "", state: ElementStates.Default },
+    { value: "", state: ElementStates.Default },
+  ];
+
+  function checkEmpty() {
+    const arr = data.filter((el) => el.value !== "");
+
+    if (arr.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   const queue = React.useMemo(() => {
     return new Queue<string>();
   }, []);
 
-  const handleInput = (evt) => {
-    setInput(evt.target.value);
+  const handleInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    const value = evt.target.value.trim();
+    setInput(value);
   };
 
   //Добавление
   const handleAdd = async () => {
+    setInput("");
     queue.enqueue(input);
-    queue._storage[queue._newestIndex - 1].state = ElementStates.Changing;
-    setData([...queue._storage]);
+    queue.storage[queue.newestIndex - 1].state = ElementStates.Changing;
+    setData([...queue.storage]);
     await sleep(500);
-    queue._storage[queue._newestIndex - 1].state = ElementStates.Default;
-    setData([...queue._storage]);
+    queue.storage[queue.newestIndex - 1].state = ElementStates.Default;
+    setData([...queue.storage]);
   };
 
   //Удаление
   const handleDelete = async () => {
     queue.dequeue();
-    queue._storage[queue._oldestIndex - 1].state = ElementStates.Changing;
-    setData([...queue._storage]);
+    queue.storage[queue.oldestIndex - 1].state = ElementStates.Changing;
+    setData([...queue.storage]);
     await sleep(500);
-    queue._storage[queue._oldestIndex - 1].state = ElementStates.Default;
-    setData([...queue._storage]);
+    queue.storage[queue.oldestIndex - 1].state = ElementStates.Default;
+    setData([...queue.storage]);
   };
 
   //Очистка
   const handleClear = () => {
-    setData([]);
+    queue.storage = [...initialData];
+    queue.newestIndex = 0;
+    queue.oldestIndex = 0;
+    setData([...queue.storage]);
   };
 
   useEffect(() => {
-    setData([...queue._storage]);
+    queue.storage = [...initialData];
+    setData([...queue.storage]);
   }, []);
+
+  useEffect(() => {
+    setDeleteDisabled(checkEmpty());
+  }, [data]);
 
   return (
     <SolutionLayout title="Очередь">
@@ -100,15 +118,15 @@ export const QueuePage = () => {
           <Input
             id="input"
             maxLength={4}
-            onInput={(evt) => {
+            onInput={(evt: React.ChangeEvent<HTMLInputElement>) => {
               handleInput(evt);
             }}
+            value={input}
           />
-
-          <Button text="Добавить" onClick={handleAdd} />
-          <Button text="Удалить" onClick={handleDelete} />
+          <Button text="Добавить" disabled={input.length > 0 ? false : true} onClick={handleAdd} />
+          <Button text="Удалить" onClick={handleDelete} disabled={deleteDisabled} />
         </div>
-        <Button text="Очистить" onClick={handleClear} />
+        <Button text="Очистить" onClick={handleClear} disabled={deleteDisabled} />
       </div>
       <div className={styles.stack_container}>
         {data &&
@@ -117,8 +135,8 @@ export const QueuePage = () => {
               <Circle
                 letter={el.value}
                 key={i}
-                head={i === queue._oldestIndex ? "head" : ""}
-                tail={i + 1 === queue._newestIndex ? "tail" : ""}
+                head={i === queue.oldestIndex ? "head" : ""}
+                tail={i + 1 === queue.newestIndex ? "tail" : ""}
                 state={el.state}
                 index={i}
               />

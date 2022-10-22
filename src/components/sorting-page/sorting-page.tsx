@@ -13,7 +13,6 @@ export const SortingPage: React.FC = () => {
   const [renderArray, setRenderArray] = React.useState<ISort[]>([]);
 
   const [ascLoading, setAscLoading] = useState(false);
-  const [descDisabled, setDescDisabled] = useState(false);
   const [descLoading, setDescLoading] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(false);
 

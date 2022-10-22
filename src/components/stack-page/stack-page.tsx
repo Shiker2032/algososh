@@ -5,39 +5,15 @@ import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
+import Stack from "./stackClass";
 import styles from "./stake-page.module.css";
-
-class Stack<T> implements IStack<T> {
-  container: T[] = [];
-
-  push = (item: T): void => {
-    this.container.push(item);
-  };
-
-  pop = (): void => {
-    if (this.container.length !== 0) {
-      this.container.pop();
-    }
-  };
-
-  elements = () => {
-    const arr = [];
-    for (let i of this.container) arr.push(i);
-    return arr;
-  };
-
-  clear = () => {
-    this.container = [];
-  };
-}
 
 export const StackPage = () => {
   const [displayArr, setDisplayArr] = React.useState<string[]>([]);
   const [input, setInput] = useState("");
   const [color, setColor] = React.useState<ElementStates>(ElementStates.Default);
-  const [addDisabled, setAddDisabled] = useState(true);
-
   const time = 500;
+
   const stack = React.useMemo(() => {
     return new Stack<string>();
   }, []);
@@ -73,7 +49,6 @@ export const StackPage = () => {
       }, time);
     }, time);
   };
-
   //Очистка
   const handleClear = () => {
     stack.clear();
