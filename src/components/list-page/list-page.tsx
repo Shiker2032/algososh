@@ -224,7 +224,7 @@ export const ListPage = () => {
   return (
     <SolutionLayout title="Связный список">
       <div className={styles.container}>
-        <div className={styles.input}>
+        <div className={styles.inputs}>
           <Input
             id="input"
             maxLength={4}
@@ -258,7 +258,7 @@ export const ListPage = () => {
             disabled={disableAll}
           />
         </div>
-        <div className={styles.input}>
+        <div className={styles.inputs}>
           <Input
             id="inputIndex"
             maxLength={4}
@@ -282,11 +282,11 @@ export const ListPage = () => {
           />
         </div>
       </div>
-      <div className={styles.list_container}>
+      <div className={styles.list}>
         {displayArray &&
           displayArray.map((el, i) => {
             return (
-              <div key={Math.round(Math.random() * 1000000)} className={styles.circles_container}>
+              <div key={Math.round(Math.random() * 1000000)} className={styles.circles}>
                 <div className={styles.circle_top}>
                   {el.circle && el.circleBottom === false && (
                     <Circle letter={el?.circle?.value} state={el.circle?.state} isSmall />

@@ -6,7 +6,7 @@
   margin: 0 auto;
 }
 
-.list_container {
+.list {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -15,7 +15,7 @@
   gap: 16px;
 }
 
-.circles_container {
+.circles {
   position: relative;
   padding: 0;
   margin: 0;
@@ -37,16 +37,16 @@
   left: 10px;
 }
 
-.input {
+.inputs {
   display: flex;
   gap: 12px;
 }
 
-.input input {
+.inputs input {
   width: 260px;
   margin-bottom: 10px;
 }
 
-.input button {
+.inputs button {
   width: 100%;
 }
