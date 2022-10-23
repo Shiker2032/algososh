@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ElementStates } from "../../types/element-states";
-import { IStack } from "../../types/main";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import Stack from "./stackClass";
+import Stack from "./stack-class";
 import styles from "./stake-page.module.css";
 
 export const StackPage = () => {
@@ -29,10 +28,10 @@ export const StackPage = () => {
     setInput("");
     setTimeout(() => {
       setColor(ElementStates.Changing);
-      setDisplayArr([...stack.container]);
+      setDisplayArr([...stack.getElements()]);
       setTimeout(() => {
         setColor(ElementStates.Default);
-        setDisplayArr([...stack.container]);
+        setDisplayArr([...stack.getElements()]);
       }, time);
     }, time);
   };
@@ -41,11 +40,11 @@ export const StackPage = () => {
   const handleDelete = () => {
     setTimeout(() => {
       setColor(ElementStates.Changing);
-      setDisplayArr([...stack.container]);
+      setDisplayArr([...stack.getElements()]);
       setTimeout(() => {
         stack.pop();
         setColor(ElementStates.Default);
-        setDisplayArr([...stack.container]);
+        setDisplayArr([...stack.getElements()]);
       }, time);
     }, time);
   };
@@ -58,7 +57,7 @@ export const StackPage = () => {
   return (
     <SolutionLayout title="Стек">
       <div className={styles.container}>
-        <div className={styles.input}>
+        <div className={styles.inputs}>
           <Input
             id="input"
             maxLength={4}
@@ -81,9 +80,9 @@ export const StackPage = () => {
           disabled={displayArr.length > 0 ? false : true}
         />
       </div>
-      <div className={styles.stack_container}>
-        {displayArr.length > 0 &&
-          displayArr.map((el, i) => {
+      <div className={styles.circles}>
+        {stack.getElements().length > 0 &&
+          stack.getElements().map((el, i) => {
             return (
               <Circle
                 letter={el}

@@ -5,17 +5,17 @@
   margin: 0 auto;
 }
 
-.input {
+.inputs {
   display: flex;
   max-width: 630px;
   gap: 12px;
 }
 
-.input input {
+.inputs input {
   min-width: 377px;
 }
 
-.stack_container {
+.circles {
   display: flex;
   justify-content: center;
   margin-top: 100px;

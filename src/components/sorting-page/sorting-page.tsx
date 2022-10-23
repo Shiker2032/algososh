@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ElementStates } from "../../types/element-states";
-import { ISort } from "../../types/main";
+import { IQueueElement } from "../../types/main";
 import { generateRandomArray, getRandomNumber, sleep } from "../../utils/utils";
 import { Button } from "../ui/button/button";
 import { Column } from "../ui/column/column";
@@ -10,21 +10,19 @@ import styles from "./sorting-page.module.css";
 
 export const SortingPage: React.FC = () => {
   const [selectedSort, setSelectedSort] = useState("selection");
-  const [renderArray, setRenderArray] = React.useState<ISort[]>([]);
-
+  const [renderArray, setRenderArray] = React.useState<IQueueElement[]>([]);
   const [ascLoading, setAscLoading] = useState(false);
   const [descLoading, setDescLoading] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(false);
-
-  const time = 1000;
+  const time = 750;
 
   useEffect(() => {
     setRenderArray([...prepareArray(1, 100)]);
   }, []);
 
-  function prepareArray(min: number, max: number) {
+  const prepareArray = (min: number, max: number) => {
     const array = generateRandomArray(min, max);
-    const generatedArray: ISort[] = [];
+    const generatedArray: IQueueElement[] = [];
 
     array.map((el, i) => {
       const object = {
@@ -34,17 +32,17 @@ export const SortingPage: React.FC = () => {
       generatedArray.push(object);
     });
     return generatedArray;
-  }
+  };
 
-  function handleSort(arr: ISort[], type: string) {
+  const handleSort = (arr: IQueueElement[], type: string) => {
     if (selectedSort === "bubble") {
       bubbleSort(arr, type);
     } else {
-      selectionSortAsync(arr, type);
+      selectionSort(arr, type);
     }
-  }
+  };
 
-  async function bubbleSort(arr: ISort[], sortingType: string) {
+  const bubbleSort = async (arr: IQueueElement[], sortingType: string) => {
     setInputDisabled(true);
     if (sortingType === "asc") {
       setAscLoading(true);
@@ -80,9 +78,9 @@ export const SortingPage: React.FC = () => {
     arr[0].state = ElementStates.Modified;
     arr[arr.length - 1].state = ElementStates.Modified;
     setRenderArray([...arr]);
-  }
+  };
 
-  async function selectionSortAsync(arr: ISort[], sortingType: string) {
+  const selectionSort = async (arr: IQueueElement[], sortingType: string) => {
     setInputDisabled(true);
     if (sortingType === "asc") {
       setAscLoading(true);
@@ -117,13 +115,13 @@ export const SortingPage: React.FC = () => {
         setDescLoading(false);
       }
     }
-  }
+  };
 
   return (
     <SolutionLayout title="Сортировка массива">
-      <form className={styles.form_container}>
-        <div className={styles.input__container}>
-          <div className={styles.input_radios}>
+      <form className={styles.form}>
+        <div className={styles.inputs}>
+          <div className={styles.radios}>
             <RadioInput
               name="rb"
               onChange={() => setSelectedSort("selection")}
@@ -143,7 +141,7 @@ export const SortingPage: React.FC = () => {
           <Button
             text="По возрастанию"
             onClick={() => {
-              handleSort(renderArray as ISort[], "asc");
+              handleSort(renderArray as IQueueElement[], "asc");
             }}
             isLoader={ascLoading}
             disabled={inputDisabled}
@@ -151,12 +149,12 @@ export const SortingPage: React.FC = () => {
           <Button
             text="По убыванию"
             onClick={() => {
-              handleSort(renderArray as ISort[], "desc");
+              handleSort(renderArray as IQueueElement[], "desc");
             }}
             isLoader={descLoading}
             disabled={inputDisabled}
           />
-          <div className={styles.input_generator}>
+          <div className={styles.generator}>
             <Button
               onClick={() => {
                 setRenderArray([...prepareArray(1, 100)]);
@@ -166,10 +164,10 @@ export const SortingPage: React.FC = () => {
             />
           </div>
         </div>
-        <div className={styles.columns__container}>
+        <div className={styles.columns}>
           {renderArray.length > 1 &&
             renderArray.map((el, i) => {
-              return <Column index={el.value} state={el.state} key={i} />;
+              return <Column index={el.value as number} state={el.state} key={i} />;
             })}
         </div>
       </form>

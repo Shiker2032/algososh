@@ -17,13 +17,17 @@ export const StringComponent: React.FC = () => {
     setInput(value);
   };
 
+  const handleSubmit = (evt: React.ChangeEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    handleClick();
+  };
+
   const handleClick = () => {
     let start = 0;
     let end = input.length - 1;
     let time = 1000;
     const outputArr: IString[] = [];
     const inputArr = Array.from(input);
-
     setInput("");
     setisLoading(true);
     inputArr.forEach((el, i) => {
@@ -66,12 +70,13 @@ export const StringComponent: React.FC = () => {
 
   return (
     <SolutionLayout title="Строка">
-      <div className={styles.input__container}>
+      <form
+        className={styles.form}
+        onSubmit={(evt: React.ChangeEvent<HTMLFormElement>) => handleSubmit(evt)}>
         <Input
           onChange={(evt: React.ChangeEvent<HTMLInputElement>) => handleInput(evt)}
           maxLength={11}
           isLimitText={true}
-          extraClass={styles.string_input}
           id="string-input"
           value={input}
         />
@@ -81,8 +86,8 @@ export const StringComponent: React.FC = () => {
           disabled={input.length > 0 ? false : true}
           isLoader={isLoading}
         />
-      </div>
-      <div className={styles.circles__container}>
+      </form>
+      <div className={styles.circles}>
         {displayArr.length > 0 &&
           displayArr.map((el, i) => {
             return <Circle state={el?.state} letter={el?.letter} key={i} />;

@@ -1,11 +1,11 @@
-.input__container {
+.form {
   display: flex;
   width: 522px;
   margin: auto;
   gap: 12px;
 }
 
-.circles__container {
+.circles {
   display: flex;
   gap: 10px;
   width: 522px;

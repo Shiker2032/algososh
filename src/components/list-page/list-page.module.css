@@ -6,20 +6,7 @@
   margin: 0 auto;
 }
 
-.input {
-  display: flex;
-  gap: 12px;
-}
-
-.input input {
-  width: 260px;
-}
-
-.input button {
-  width: 100%;
-}
-
-.stack_container {
+.list_container {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -28,7 +15,7 @@
   gap: 16px;
 }
 
-.circles__container {
+.circles_container {
   position: relative;
   padding: 0;
   margin: 0;
@@ -37,15 +24,29 @@
   gap: 10px;
 }
 
-.stack_top {
+.circle_top {
   position: absolute;
   top: -65px;
   left: 13px;
   padding: 0;
 }
 
-.stack_bottom {
+.circle_bottom {
   position: absolute;
   top: 125px;
   left: 10px;
+}
+
+.input {
+  display: flex;
+  gap: 12px;
+}
+
+.input input {
+  width: 260px;
+  margin-bottom: 10px;
+}
+
+.input button {
+  width: 100%;
 }
