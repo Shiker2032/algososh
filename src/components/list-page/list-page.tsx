@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { ElementStates } from "../../types/element-states";
-import { IListElement } from "../../types/main";
-import { sleep } from "../../utils/utils";
-import { Button } from "../ui/button/button";
-import { Circle } from "../ui/circle/circle";
-import { ArrowIcon } from "../ui/icons/arrow-icon";
-import { Input } from "../ui/input/input";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import LinkedListNode from "./list-class";
-import styles from "./list-page.module.css";
+import React, { useEffect, useState } from "react"
+import { ElementStates } from "../../types/element-states"
+import { IListElement } from "../../types/main"
+import { sleep } from "../../utils/utils"
+import { Button } from "../ui/button/button"
+import { Circle } from "../ui/circle/circle"
+import { ArrowIcon } from "../ui/icons/arrow-icon"
+import { Input } from "../ui/input/input"
+import { SolutionLayout } from "../ui/solution-layout/solution-layout"
+import LinkedListNode from "./list-class"
+import styles from "./list-page.module.css"
 
 export const ListPage = () => {
-  const [displayArray, setDisplayArray] = React.useState<IListElement[]>([]);
-  const [inputString, setInputString] = React.useState<string | number | undefined>("");
-  const [inputIndex, setInputIndex] = React.useState<string | number | undefined>("");
-  const [showHead, setShowHead] = useState(true);
-  const [showTail, setShowTail] = useState(true);
+  const [displayArray, setDisplayArray] = React.useState<IListElement[]>([])
+  const [inputString, setInputString] = React.useState<string | number | undefined>("")
+  const [inputIndex, setInputIndex] = React.useState<string | number | undefined>("")
+  const [showHead, setShowHead] = useState(true)
+  const [showTail, setShowTail] = useState(true)
 
-  const [addHeadLoading, setAddHeadLoading] = useState(false);
-  const [addTailLoading, setAddTailLoading] = useState(false);
-  const [deleteFromHeadLoading, setDeleteFromHeadLoading] = useState(false);
-  const [deleteFromTailLoading, setDeleteFromTailLoading] = useState(false);
-  const [addByIndexLoading, setAddByIndexLoading] = useState(false);
-  const [deleteByIndexLoading, setDeleteByIndexLoading] = useState(false);
-  const [disableAll, setDisableAll] = useState(false);
+  const [addHeadLoading, setAddHeadLoading] = useState(false)
+  const [addTailLoading, setAddTailLoading] = useState(false)
+  const [deleteFromHeadLoading, setDeleteFromHeadLoading] = useState(false)
+  const [deleteFromTailLoading, setDeleteFromTailLoading] = useState(false)
+  const [addByIndexLoading, setAddByIndexLoading] = useState(false)
+  const [deleteByIndexLoading, setDeleteByIndexLoading] = useState(false)
+  const [disableAll, setDisableAll] = useState(false)
 
   const initialData = [
     {
@@ -40,199 +40,200 @@ export const ListPage = () => {
     },
     { value: 8, state: ElementStates.Default, circle: null, circleBottom: false },
     { value: 1, state: ElementStates.Default, circle: null, circleBottom: false },
-  ];
+  ]
 
   const handleAddByIndex = async (index: string | number, input: string | number) => {
-    const arr = linkedList.getElements();
-    const indexInput = Number(index);
+    const arr = linkedList.getElements()
+    const indexInput = Number(index)
 
     for (let j = 0; j < arr.length; j++) {
       if (indexInput !== j) {
         let changes = {
           state: ElementStates.Changing,
           circle: { value: input, state: ElementStates.Default },
-        };
-        linkedList.changeElement(j, changes);
-        setDisplayArray([...linkedList.getElements()]);
-        setShowHead(false);
-        await sleep(1000);
-        linkedList.changeElement(j, { circle: null });
-        setDisplayArray([...linkedList.getElements()]);
+        }
+        linkedList.changeElement(j, changes)
+        setDisplayArray([...linkedList.getElements()])
+        setShowHead(false)
+        await sleep(1000)
+        linkedList.changeElement(j, { circle: null })
+        setDisplayArray([...linkedList.getElements()])
       } else {
-        let changes = { circle: { value: input, state: ElementStates.Changing } };
-        linkedList.changeElement(indexInput, changes);
-        setDisplayArray([...linkedList.getElements()]);
-        await sleep(1000);
-        linkedList.changeElement(indexInput, { circle: null });
-        setDisplayArray([...linkedList.getElements()]);
-        linkedList.addByIndex(indexInput, input);
-        setDisplayArray([...linkedList.getElements()]);
-        linkedList.changeElement(j, { state: ElementStates.Modified });
-        setDisplayArray([...linkedList.getElements()]);
-        setShowHead(true);
-        await sleep(1000);
-        linkedList.changeElement(j, { state: ElementStates.Default });
-        setDisplayArray([...linkedList.getElements()]);
-        return;
+        let changes = { circle: { value: input, state: ElementStates.Changing } }
+        linkedList.changeElement(indexInput, changes)
+        setDisplayArray([...linkedList.getElements()])
+        await sleep(1000)
+        linkedList.changeElement(indexInput, { circle: null })
+        setDisplayArray([...linkedList.getElements()])
+        linkedList.addByIndex(indexInput, input)
+        setDisplayArray([...linkedList.getElements()])
+        linkedList.changeElement(j, { state: ElementStates.Modified })
+        setDisplayArray([...linkedList.getElements()])
+        setShowHead(true)
+        await sleep(1000)
+        linkedList.changeElement(j, { state: ElementStates.Default })
+        setDisplayArray([...linkedList.getElements()])
+        return
       }
     }
-  };
+  }
 
   const handleDeleteByIndex = async (index: number) => {
-    const arr = displayArray;
-    const inputIndex = Number(index);
+    const arr = displayArray
+    const inputIndex = Number(index)
     for (let j = 0; j < arr.length; j++) {
-      let changes = {};
-      linkedList.changeElement(j, { state: ElementStates.Changing });
-      setDisplayArray([...linkedList.getElements()]);
-      await sleep(1000);
+      let changes = {}
+      linkedList.changeElement(j, { state: ElementStates.Changing })
+      setDisplayArray([...linkedList.getElements()])
+      await sleep(1000)
       if (j === inputIndex) {
         changes = {
           state: ElementStates.Default,
           value: "",
           circle: { value: arr[j].value, state: ElementStates.Changing },
           circleBottom: true,
-        };
-        linkedList.changeElement(j, changes);
-        setDisplayArray([...linkedList.getElements()]);
-        setShowTail(false);
-        await sleep(1000);
+        }
+        linkedList.changeElement(j, changes)
+        setDisplayArray([...linkedList.getElements()])
+        setShowTail(false)
+        await sleep(1000)
 
-        linkedList.deleteByIndex(j);
-        setDisplayArray([...linkedList.getElements()]);
-        setShowTail(true);
-        return;
+        linkedList.deleteByIndex(j)
+        setDisplayArray([...linkedList.getElements()])
+        setShowTail(true)
+        return
       }
     }
-    setDisplayArray([...arr]);
-  };
+    setDisplayArray([...arr])
+  }
 
   const handleAddHead = async (input: string | number) => {
-    setAddHeadLoading(true);
-    setDisableAll(true);
+    setAddHeadLoading(true)
+    setDisableAll(true)
     let changes = {
       state: ElementStates.Changing,
       circle: { value: input, state: ElementStates.Default },
       circleBottom: false,
-    };
+    }
 
-    linkedList.changeElement(0, changes);
-    setInputString("");
-    setDisplayArray([...linkedList.getElements()]);
-    setShowHead(false);
-    await sleep(1000);
+    linkedList.changeElement(0, changes)
+    setInputString("")
+    setDisplayArray([...linkedList.getElements()])
+    setShowHead(false)
+    await sleep(1000)
 
-    linkedList.changeElement(0, { circle: null, state: ElementStates.Default });
-    linkedList.prepend(input);
-    linkedList.changeElement(0, { state: ElementStates.Modified });
-    setDisplayArray([...linkedList.getElements()]);
-    setShowHead(true);
-    await sleep(1000);
+    linkedList.changeElement(0, { circle: null, state: ElementStates.Default })
+    if (displayArray.length === 0) {
+      linkedList.changeElement(0, {
+        value: input,
+        state: ElementStates.Default,
+        circle: null,
+        circleBottom: false,
+      })
+    } else {
+      linkedList.prepend(input)
+    }
 
-    linkedList.changeElement(0, { state: ElementStates.Default });
-    setDisplayArray([...linkedList.getElements()]);
-    setAddHeadLoading(false);
-    setDisableAll(false);
-  };
+    setDisplayArray([...linkedList.getElements()])
+    setShowHead(true)
+    await sleep(1000)
+    linkedList.changeElement(0, { state: ElementStates.Default })
+    setDisplayArray([...linkedList.getElements()])
+    setAddHeadLoading(false)
+    setDisableAll(false)
+  }
 
   const handleAddTail = async (input: string | number) => {
-    setAddTailLoading(true);
-    setDisableAll(true);
-    const arr = linkedList.getElements();
-    let step = arr.length - 1;
-    let changes = {};
-    changes = { circle: { value: input, state: ElementStates.Changing }, circleBottom: false };
-    linkedList.changeElement(step, changes);
-    setDisplayArray([...linkedList.getElements()]);
-    await sleep(1000);
+    setAddTailLoading(true)
+    setDisableAll(true)
+    const arr = linkedList.getElements()
+    let step = arr.length - 1
+    let changes = {}
+    changes = { circle: { value: input, state: ElementStates.Changing }, circleBottom: false }
+    linkedList.changeElement(step, changes)
+    setDisplayArray([...linkedList.getElements()])
+    await sleep(1000)
 
-    linkedList.changeElement(step, { circle: null });
+    linkedList.changeElement(step, { circle: null })
     linkedList.append({
       value: input,
       state: ElementStates.Modified,
       circle: null,
       circleBottom: false,
-    });
-    setDisplayArray([...linkedList.getElements()]);
-    await sleep(1000);
+    })
+    setDisplayArray([...linkedList.getElements()])
+    await sleep(1000)
 
-    linkedList.changeElement(step + 1, { state: ElementStates.Default });
-    setDisplayArray([...linkedList.getElements()]);
-    setAddTailLoading(false);
-    setDisableAll(false);
-  };
+    linkedList.changeElement(step + 1, { state: ElementStates.Default })
+    setDisplayArray([...linkedList.getElements()])
+    setAddTailLoading(false)
+    setDisableAll(false)
+  }
 
   const handleDeleteTail = async () => {
-    const arr = linkedList.getElements();
-    const temp = arr[arr.length - 1];
+    const arr = linkedList.getElements()
+    const temp = arr[arr.length - 1]
     const changes = {
       value: "",
       circle: { value: temp.value, state: ElementStates.Changing },
       circleBottom: true,
-    };
+    }
 
-    setDeleteFromTailLoading(true);
-    setDisableAll(true);
-    linkedList.changeElement(arr.length - 1, changes);
-    setDisplayArray([...linkedList.getElements()]);
-    setShowTail(false);
-    await sleep(1000);
-    linkedList.deleteTail();
-    setDisplayArray([...linkedList.getElements()]);
-    setShowTail(true);
-    setDeleteFromTailLoading(false);
-    setDisableAll(false);
-  };
+    setDeleteFromTailLoading(true)
+    setDisableAll(true)
+    linkedList.changeElement(arr.length - 1, changes)
+    setDisplayArray([...linkedList.getElements()])
+    setShowTail(false)
+    await sleep(1000)
+    linkedList.deleteTail()
+    setDisplayArray([...linkedList.getElements()])
+    setShowTail(true)
+    setDeleteFromTailLoading(false)
+    setDisableAll(false)
+  }
 
   const handleDeleteHead = async () => {
-    const arr = linkedList.getElements();
-    const temp = arr[0];
+    const arr = linkedList.getElements()
+    const temp = arr[0]
 
-    setDeleteFromHeadLoading(true);
-    setDisableAll(true);
+    setDeleteFromHeadLoading(true)
+    setDisableAll(true)
     linkedList.changeElement(0, {
       value: "",
       circle: { value: temp.value, state: ElementStates.Changing },
       circleBottom: true,
-    });
-    setDisplayArray([...linkedList.getElements()]);
-    await sleep(1000);
-    linkedList.deleteHead();
-    setDisplayArray([...linkedList.getElements()]);
-    setDeleteFromHeadLoading(false);
-    setDisableAll(false);
-  };
+    })
+    setDisplayArray([...linkedList.getElements()])
+    await sleep(1000)
+    linkedList.deleteHead()
+    setDisplayArray([...linkedList.getElements()])
+    setDeleteFromHeadLoading(false)
+    setDisableAll(false)
+  }
 
   const handleInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const value = evt.target.value.trim();
-    setInputString(value);
-  };
+    const value = evt.target.value.trim()
+    setInputString(value)
+  }
 
   const handleInputIndex = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const value = evt.target.value.trim();
-    setInputIndex(value);
-  };
+    const value = evt.target.value.trim()
+    setInputIndex(value)
+  }
 
   const linkedList = React.useMemo(() => {
-    return new LinkedListNode<string>(initialData);
-  }, []);
+    return new LinkedListNode<string>(initialData)
+  }, [])
 
   useEffect(() => {
-    setDisplayArray([...linkedList.getElements()]);
-  }, []);
+    setDisplayArray([...linkedList.getElements()])
+  }, [])
 
   return (
     <SolutionLayout title="Связный список">
       <div className={styles.container}>
         <div className={styles.inputs}>
-          <Input
-            id="input"
-            maxLength={4}
-            onInput={(evt: React.ChangeEvent<HTMLInputElement>) => {
-              handleInput(evt);
-            }}
-            value={inputString}
-          />
+          <Input id="input" maxLength={4} onInput={handleInput} value={inputString} />
           <Button
             text="Добавить в head"
             disabled={inputString && !disableAll ? false : true}
@@ -249,22 +250,20 @@ export const ListPage = () => {
             text="Удалить из head"
             onClick={handleDeleteHead}
             isLoader={deleteFromHeadLoading}
-            disabled={disableAll}
+            disabled={displayArray.length > 0 && !disableAll ? false : true}
           />
           <Button
             text="Удалить из tail"
             onClick={handleDeleteTail}
             isLoader={deleteFromTailLoading}
-            disabled={disableAll}
+            disabled={displayArray.length > 0 && !disableAll ? false : true}
           />
         </div>
         <div className={styles.inputs}>
           <Input
             id="inputIndex"
             maxLength={4}
-            onInput={(evt: React.ChangeEvent<HTMLInputElement>) => {
-              handleInputIndex(evt);
-            }}
+            onInput={handleInputIndex}
             placeholder="Введите индекс"
             value={inputIndex}
           />
@@ -308,9 +307,9 @@ export const ListPage = () => {
                 </div>
                 {displayArray.length - 1 !== i && <ArrowIcon />}
               </div>
-            );
+            )
           })}
       </div>
     </SolutionLayout>
-  );
-};
+  )
+}
