@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 829px;
+  margin: 0 auto;
+}
+
+.list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+  gap: 16px;
+}
+
+.circles {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.circle_top {
+  position: absolute;
+  top: -65px;
+  left: 13px;
+  padding: 0;
+}
+
+.circle_bottom {
+  position: absolute;
+  top: 125px;
+  left: 10px;
+}
+
+.inputs {
+  display: flex;
+  gap: 12px;
+}
+
+.inputs input {
+  width: 260px;
+  margin-bottom: 10px;
+}
+
+.inputs button {
+  width: 100%;
+}
