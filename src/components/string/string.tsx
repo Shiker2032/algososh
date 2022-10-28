@@ -7,6 +7,10 @@ import { Circle } from "../ui/circle/circle"
 import { ElementStates } from "../../types/element-states"
 import { IString } from "../../types/main"
 
+export const reverseString = (string: string): string => {
+  return string.split("").reverse().join("")
+}
+
 export const StringComponent: React.FC = () => {
   const [displayArr, setDisplayArr] = React.useState<IString[]>([])
   const [input, setInput] = React.useState("")
@@ -48,17 +52,20 @@ export const StringComponent: React.FC = () => {
       }
     }, 1000)
 
-    const reverse = (arr: IString[], i1: number, i2: number, time: number) => {
+    const reverse = async (arr: IString[], i1: number, i2: number, time: number) => {
+      const string = arr.map((el) => el.letter)
+      const reversed = reverseString(string.join("")).split("")
+
       setTimeout(() => {
         arr[i1].state = ElementStates.Changing
         arr[i2].state = ElementStates.Changing
-        setDisplayArr([...arr])
+        // setDisplayArr([...arr])
       }, time)
       setTimeout(() => {
-        ;[arr[i1], arr[i2]] = [arr[i2], arr[i1]]
+        ;[arr[i1].letter, arr[i2].letter] = [reversed[i1], reversed[i2]]
         arr[i1].state = ElementStates.Modified
         arr[i2].state = ElementStates.Modified
-        setDisplayArr([...arr])
+        // setDisplayArr([...arr])
       }, time + 1000)
       if (i1 + 1 === i2 || i1 === i2) {
         setTimeout(() => {
@@ -72,6 +79,7 @@ export const StringComponent: React.FC = () => {
     <SolutionLayout title="Строка">
       <form className={styles.form} onSubmit={handleSubmit}>
         <Input
+          data-testid="string input"
           onChange={handleInput}
           maxLength={11}
           isLimitText={true}
