@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react"
 import { ElementStates } from "../../../types/element-states"
 import { Circle } from "./circle"
 
-describe("Circle component tests", () => {
+describe("Circle ui component tests", () => {
   test("circle no letter", () => {
     render(<Circle />)
     expect(screen.getByTestId("letter p")).toHaveTextContent("")

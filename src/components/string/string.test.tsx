@@ -1,26 +1,85 @@
-import { render, screen, fireEvent } from "@testing-library/react"
-import { Circle } from "../ui/circle/circle"
-import { StringComponent } from "./string"
-
-import React from "react"
-import ReactDom from "react-dom"
-
+import { render, screen, waitFor } from "@testing-library/react"
 import { BrowserRouter } from "react-router-dom"
+import { StringComponent } from "./string"
 import userEvent from "@testing-library/user-event"
-import { sleep } from "../../utils/utils"
-import { act } from "react-dom/test-utils"
-import { reverseString } from "./string"
-describe("Reverse string", () => {
-  test("even argument", () => {
-    expect(reverseString("test")).toBe("tset")
+
+jest.setTimeout(100000)
+describe("String Component tests", () => {
+  test("with even input", async () => {
+    render(
+      <BrowserRouter>
+        <StringComponent />
+      </BrowserRouter>
+    )
+    const input = screen.getByTestId("string input")
+    const btn = screen.getByTestId("reverse btn")
+    const testWord = "TEST"
+    userEvent.type(input, testWord)
+    userEvent.click(btn)
+    await waitFor(
+      () => {
+        const elements = screen.getAllByTestId("letter p").map((el) => el.textContent)
+        expect(elements.join("")).toBe("TSET")
+      },
+      {
+        timeout: 10000,
+      }
+    )
   })
-  test("uneven argument", () => {
-    expect(reverseString("ABC")).toBe("CBA")
+
+  test("with uneven input", async () => {
+    render(
+      <BrowserRouter>
+        <StringComponent />
+      </BrowserRouter>
+    )
+    const input = screen.getByTestId("string input")
+    const btn = screen.getByTestId("reverse btn")
+    const testWord = "HELLO"
+    userEvent.type(input, testWord)
+    userEvent.click(btn)
+    await waitFor(
+      () => {
+        const elements = screen.getAllByTestId("letter p").map((el) => el.textContent)
+        expect(elements.join("")).toBe("OLLEH")
+      },
+      {
+        timeout: 10000,
+      }
+    )
   })
-  test("one argument", () => {
-    expect(reverseString("A")).toBe("A")
+
+  test("with one symbol in input", async () => {
+    render(
+      <BrowserRouter>
+        <StringComponent />
+      </BrowserRouter>
+    )
+    const input = screen.getByTestId("string input")
+    const btn = screen.getByTestId("reverse btn")
+    const testWord = "A"
+    userEvent.type(input, testWord)
+    userEvent.click(btn)
+    await waitFor(
+      () => {
+        const elements = screen.getAllByTestId("letter p").map((el) => el.textContent)
+        expect(elements.join("")).toBe("A")
+      },
+      {
+        timeout: 10000,
+      }
+    )
   })
-  test("empty argument", () => {
-    expect(reverseString("")).toBe("")
+
+  test("with empty input", async () => {
+    render(
+      <BrowserRouter>
+        <StringComponent />
+      </BrowserRouter>
+    )
+    const input = screen.getByTestId("string input")
+    const btn = screen.getByTestId("reverse btn")
+    userEvent.type(input, " ")
+    expect(btn).toBeDisabled()
   })
 })

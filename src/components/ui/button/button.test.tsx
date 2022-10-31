@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react"
 import { Button } from "./button"
 
-describe("Button tests", () => {
+describe("Button ui component tests", () => {
   test("button with text", () => {
     render(<Button text="test" />)
     expect(screen.getByRole("button")).toHaveTextContent("test")
