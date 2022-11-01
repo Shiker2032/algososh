@@ -12,14 +12,14 @@ describe("Button ui component tests", () => {
     expect(screen.getByRole("button")).not.toHaveTextContent("test")
   })
 
-  test("button enabled", () => {
-    render(<Button />)
-    expect(screen.getByRole("button")).toBeEnabled()
-  })
-
   test("button disabled", () => {
     render(<Button disabled={true} />)
     expect(screen.getByRole("button")).not.toBeEnabled()
+  })
+
+  test("button enabled", () => {
+    render(<Button />)
+    expect(screen.getByRole("button")).toBeEnabled()
   })
 
   test("button loader", () => {

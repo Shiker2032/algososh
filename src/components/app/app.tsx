@@ -1,4 +1,3 @@
-import React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { FibonacciPage } from "../fibonacci-page/fibonacci-page"
 import { ListPage } from "../list-page/list-page"
@@ -9,6 +8,8 @@ import { SortingPage } from "../sorting-page/sorting-page"
 import { StackPage } from "../stack-page/stack-page"
 
 import styles from "./app.module.css"
+
+const initialArray: any = [25, 10, 5, 65, 0, 1]
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
             <FibonacciPage />
           </Route>
           <Route path="/sorting">
-            <SortingPage />
+            <SortingPage initialArray={initialArray} />
           </Route>
           <Route path="/stack">
             <StackPage />

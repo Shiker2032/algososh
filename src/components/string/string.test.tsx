@@ -3,9 +3,9 @@ import { BrowserRouter } from "react-router-dom"
 import { StringComponent } from "./string"
 import userEvent from "@testing-library/user-event"
 
-jest.setTimeout(100000)
+jest.setTimeout(999999)
 describe("String Component tests", () => {
-  test("with even input", async () => {
+  test("with even amount of symbols", async () => {
     render(
       <BrowserRouter>
         <StringComponent />
@@ -13,13 +13,14 @@ describe("String Component tests", () => {
     )
     const input = screen.getByTestId("string input")
     const btn = screen.getByTestId("reverse btn")
-    const testWord = "TEST"
-    userEvent.type(input, testWord)
+    const testString = "TEST"
+
+    userEvent.type(input, testString)
     userEvent.click(btn)
     await waitFor(
       () => {
         const elements = screen.getAllByTestId("letter p").map((el) => el.textContent)
-        expect(elements.join("")).toBe("TSET")
+        expect(elements.join("")).toBe(Array(testString).reverse().join(""))
       },
       {
         timeout: 10000,
@@ -27,7 +28,7 @@ describe("String Component tests", () => {
     )
   })
 
-  test("with uneven input", async () => {
+  test("with uneven amount of symbols", async () => {
     render(
       <BrowserRouter>
         <StringComponent />
@@ -35,13 +36,14 @@ describe("String Component tests", () => {
     )
     const input = screen.getByTestId("string input")
     const btn = screen.getByTestId("reverse btn")
-    const testWord = "HELLO"
-    userEvent.type(input, testWord)
+    const testString = "HELLO"
+
+    userEvent.type(input, testString)
     userEvent.click(btn)
     await waitFor(
       () => {
         const elements = screen.getAllByTestId("letter p").map((el) => el.textContent)
-        expect(elements.join("")).toBe("OLLEH")
+        expect(elements.join("")).toBe(Array(testString).reverse().join(""))
       },
       {
         timeout: 10000,
@@ -57,13 +59,14 @@ describe("String Component tests", () => {
     )
     const input = screen.getByTestId("string input")
     const btn = screen.getByTestId("reverse btn")
-    const testWord = "A"
-    userEvent.type(input, testWord)
+    const testString = "A"
+
+    userEvent.type(input, testString)
     userEvent.click(btn)
     await waitFor(
       () => {
         const elements = screen.getAllByTestId("letter p").map((el) => el.textContent)
-        expect(elements.join("")).toBe("A")
+        expect(elements.join("")).toBe(testString)
       },
       {
         timeout: 10000,
@@ -79,6 +82,7 @@ describe("String Component tests", () => {
     )
     const input = screen.getByTestId("string input")
     const btn = screen.getByTestId("reverse btn")
+
     userEvent.type(input, " ")
     expect(btn).toBeDisabled()
   })
