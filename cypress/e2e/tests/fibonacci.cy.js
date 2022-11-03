@@ -1,5 +1,3 @@
-/// <reference types = 'cypress'/>
-
 describe("Fibonacci page test", () => {
   beforeEach(() => {
     cy.visit("/")
@@ -14,7 +12,6 @@ describe("Fibonacci page test", () => {
     cy.get("#string-input").type("2")
     cy.contains("button", "Рассчитать").should("not.be.disabled")
   })
-
   it("number generation", { defaultCommandTimeout: 10000 }, () => {
     const n = 10
     const fibRef = [
