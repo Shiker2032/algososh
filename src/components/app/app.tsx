@@ -9,8 +9,6 @@ import { StackPage } from "../stack-page/stack-page"
 
 import styles from "./app.module.css"
 
-const initialArray: any = [25, 10, 5, 65, 0, 1]
-
 function App() {
   return (
     <div className={styles.app}>
@@ -26,7 +24,7 @@ function App() {
             <FibonacciPage />
           </Route>
           <Route path="/sorting">
-            <SortingPage initialArray={initialArray} />
+            <SortingPage />
           </Route>
           <Route path="/stack">
             <StackPage />
