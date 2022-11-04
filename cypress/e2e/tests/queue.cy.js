@@ -1,88 +1,75 @@
+/// <reference types = 'cypress'/>
+
 describe("Queue page tests", () => {
+  const testingArray = [1, 2, 3, 4, 5, 6, 7]
+  const defaultColor = "rgb(0, 50, 255)"
+  const changingColor = "rgb(210, 82, 225)"
   beforeEach(() => {
     cy.visit("/")
     cy.get('[href="/queue"] > .main-page_card__ZylSn').click()
+    cy.get("#input").should("be.empty").as("input")
+    cy.contains("button", "Добавить").as("addBtn")
+    cy.contains("button", "Удалить").as("deleteBtn")
+    cy.contains("button", "Очистить").as("clearBtn")
   })
   it("buttons disabled on empty input", () => {
-    cy.get("#input").should("be.empty")
-    cy.contains("button", "Добавить").should("be.disabled")
-    cy.contains("button", "Удалить").should("be.disabled")
-    cy.contains("button", "Очистить").should("be.disabled")
+    cy.get("@input").should("be.empty")
+    cy.get("@addBtn").should("be.disabled")
+    cy.get("@deleteBtn").should("be.disabled")
+    cy.get("@clearBtn").should("be.disabled")
   })
   it("add to queue", () => {
-    const defaultColor = "rgb(0, 50, 255)"
-    const changingColor = "rgb(210, 82, 225)"
-
     cy.clock()
-    cy.get("#input").should("be.empty").type(1)
-    cy.contains("button", "Добавить").should("not.be.disabled").click()
-    cy.get('div[data-testid="circle div"]')
-      .eq(0)
-      .should("have.text", 1)
-      .and("have.css", "border-color", changingColor)
-      .parent()
-      .should("contain", "head")
-      .and("contain", "tail")
-    cy.tick(500)
 
-    cy.get('div[data-testid="circle div"]').eq(0).should("have.css", "border-color", defaultColor)
-    cy.get("#input").should("be.empty").type(2)
-    cy.contains("button", "Добавить").should("not.be.disabled").click()
-    cy.get('div[data-testid="circle div"]')
-      .eq(1)
-      .should("have.text", 2)
-      .and("have.css", "border-color", changingColor)
-      .parent()
-      .should("contain", "tail")
-      .and("not.contain", "head")
-    cy.tick(500)
-    cy.get('div[data-testid="circle div"]').eq(1).should("have.css", "border-color", defaultColor)
+    for (let i = 0; i < testingArray.length; i++) {
+      cy.get("@input").should("be.empty").type(testingArray[i])
+      cy.get("@addBtn").should("not.be.disabled").click()
+
+      cy.get('div[data-testid="circle div"]')
+        .eq(i)
+        .should("have.text", testingArray[i])
+        .and("have.css", "border-color", changingColor)
+        .parent()
+        .should("contain", "tail")
+      cy.tick(500)
+      cy.get('div[data-testid="circle div"]').eq(i).should("have.css", "border-color", defaultColor)
+    }
   })
   it("delete from queue", () => {
-    const defaultColor = "rgb(0, 50, 255)"
-    const changingColor = "rgb(210, 82, 225)"
-
     cy.clock()
-    cy.get("#input").should("be.empty").type(1)
-    cy.contains("button", "Добавить").should("not.be.disabled").click()
-    cy.tick(1000)
 
-    cy.get("#input").should("be.empty").type(2)
-    cy.contains("button", "Добавить").should("not.be.disabled").click()
-    cy.tick(1000)
+    for (let i = 0; i < testingArray.length; i++) {
+      cy.get("@input").should("be.empty").type(testingArray[i])
+      cy.get("@addBtn").should("not.be.disabled").click()
+      cy.tick(1000)
+    }
 
-    cy.contains("button", "Удалить").should("not.be.disabled").click()
-    cy.get('div[data-testid="circle div"]')
-      .eq(0)
-      .should("have.text", "")
-      .and("have.css", "border-color", changingColor)
-      .parent()
-      .should("not.contain", "head")
-      .and("not.contain", "tail")
-    cy.tick(500)
-    cy.get('div[data-testid="circle div"]').eq(0).should("have.css", "border-color", defaultColor)
-    cy.get('div[data-testid="circle div"]')
-      .eq(1)
-      .parent()
-      .should("contain", "head")
-      .and("contain", "tail")
+    for (let j = 0; j < testingArray.length; j++) {
+      cy.get('div[data-testid="circle div"]').eq(j).parent().should("contain", "head")
+      cy.get("@deleteBtn").click()
+      cy.get('div[data-testid="circle div"]')
+        .eq(j)
+        .should("have.text", "")
+        .and("have.css", "border-color", changingColor)
+      cy.tick(500)
+      cy.get('div[data-testid="circle div"]')
+        .eq(j)
+        .should("have.css", "border-color", defaultColor)
+        .parent()
+        .should("not.contain", "head")
+    }
   })
 
   it("clear queue", () => {
     cy.clock()
-    cy.get("#input").should("be.empty").type(1)
-    cy.contains("button", "Добавить").should("not.be.disabled").click()
-    cy.tick(1000)
 
-    cy.get("#input").should("be.empty").type(2)
-    cy.contains("button", "Добавить").should("not.be.disabled").click()
-    cy.tick(1000)
+    for (let i = 0; i < testingArray.length; i++) {
+      cy.get("@input").should("be.empty").type(testingArray[i])
+      cy.get("@addBtn").should("not.be.disabled").click()
+      cy.tick(1000)
+    }
 
-    cy.get("#input").should("be.empty").type(3)
-    cy.contains("button", "Добавить").should("not.be.disabled").click()
-    cy.tick(1000)
-
-    cy.contains("button", "Очистить").should("not.be.disabled").click()
+    cy.get("@clearBtn").should("not.be.disabled").click()
     cy.get('div[data-testid="circle div"]').each(($div) => {
       expect($div).to.have.text("")
     })
