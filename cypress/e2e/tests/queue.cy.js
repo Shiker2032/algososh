@@ -1,12 +1,11 @@
 /// <reference types = 'cypress'/>
+import { colors } from "../../../src/utils/consts"
 
 describe("Queue page tests", () => {
   const testingArray = [1, 2, 3, 4, 5, 6, 7]
-  const defaultColor = "rgb(0, 50, 255)"
-  const changingColor = "rgb(210, 82, 225)"
+  const { defaultColor, changingColor } = colors
   beforeEach(() => {
-    cy.visit("/")
-    cy.get('[href="/queue"] > .main-page_card__ZylSn').click()
+    cy.visit("/queue")
     cy.get("#input").should("be.empty").as("input")
     cy.contains("button", "Добавить").as("addBtn")
     cy.contains("button", "Удалить").as("deleteBtn")

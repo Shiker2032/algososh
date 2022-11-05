@@ -20,7 +20,7 @@ export const SortingPage: React.FC<{ initialArray?: Array<string | number> }> = 
 
   useEffect(() => {
     if (initialArray) {
-      const preparedArray: any = []
+      const preparedArray: IQueueElement[] = []
       initialArray.forEach((el, i) => {
         preparedArray.push({ value: el, state: ElementStates.Default })
       })

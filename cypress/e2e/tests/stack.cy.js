@@ -1,13 +1,12 @@
 /// <reference types = 'cypress'/>
+import { colors } from "../../../src/utils/consts"
 
 describe("Stack page tests", () => {
-  const defaultColor = "rgb(0, 50, 255)"
-  const changingColor = "rgb(210, 82, 225)"
+  const { defaultColor, changingColor } = colors
   const testingArray = [1, 2, 3, 4]
 
   beforeEach(() => {
-    cy.visit("/")
-    cy.get('[href="/stack"] > .main-page_card__ZylSn').click()
+    cy.visit("/stack")
     cy.get("#input").as("input")
     cy.contains("button", "Добавить").as("addBtn")
     cy.contains("button", "Удалить").as("deleteBtn")

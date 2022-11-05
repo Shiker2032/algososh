@@ -2,8 +2,7 @@
 
 describe("String page test", () => {
   beforeEach(() => {
-    cy.visit("/")
-    cy.get('[href="/recursion"] > .main-page_card__ZylSn').click()
+    cy.visit("/recursion")
     cy.get('[data-testid="string input"]').as("input")
     cy.get('[data-testid="reverse btn"]').as("reverseBtn")
   })
@@ -11,9 +10,6 @@ describe("String page test", () => {
     cy.get("@reverseBtn").should("be.disabled")
   })
   it("reverse string", async () => {
-    const defaultColor = "rgb(0, 50, 255)"
-    const changingColor = "rgb(210, 82, 225)"
-    const modifiedColor = "rgb(127, 224, 81)"
     cy.clock()
     cy.get("@input").type("WORD")
     cy.get("@input").should("have.value", "WORD")

@@ -1,13 +1,11 @@
 /// <reference types = 'cypress'/>
+import { colors } from "../../../src/utils/consts"
 
 describe("List page tests", () => {
   const initialArrayRef = [0, 34, 8, 1]
-  const changingColor = "rgb(210, 82, 225)"
-  const defaultColor = "rgb(0, 50, 255)"
-  const modifiedColor = "rgb(127, 224, 81)"
+  const { defaultColor, changingColor, modifiedColor } = colors
   beforeEach(() => {
-    cy.visit("/")
-    cy.get('[href="/list"] > .main-page_card__ZylSn').click()
+    cy.visit("/list")
     cy.get("#input").as("stringInput")
     cy.get("#inputIndex").as("indexInput")
     cy.contains("button", "Добавить в head").as("addToHeadBtn")

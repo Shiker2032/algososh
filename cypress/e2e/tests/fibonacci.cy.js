@@ -2,8 +2,7 @@
 
 describe("Fibonacci page test", () => {
   beforeEach(() => {
-    cy.visit("/")
-    cy.get('[href="/fibonacci"] > .main-page_card__ZylSn').click()
+    cy.visit("/fibonacci")
     cy.get("#string-input").as("input")
     cy.contains("button", "Рассчитать").as("submitBtn")
   })
