@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Circle ui component tests circle with head 1`] = `
+<div
+  class="text text_type_input text_color_input mb-4 absolute head string"
+  data-testid="head div"
+>
+  test
+</div>
+`;
+
+exports[`Circle ui component tests circle with letter 1`] = `
+<p
+  class="text text_type_circle text_color_input letter"
+  data-testid="letter p"
+>
+  test
+</p>
+`;

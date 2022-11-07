@@ -30,10 +30,13 @@ export const FibonacciPage: React.FC = () => {
   }
 
   const getFibonacciNumbers = async (n: number) => {
+    if (n === 0) return
+    if (n === 1) return setSequenceArr([1])
     let arr = [1, 1]
     let time = 500
     setisLoading(true)
     setDisableInput(true)
+    setDisableBtn(true)
     setValue("")
 
     for (let i = 2; i <= n; i++) {

@@ -76,9 +76,11 @@ export const StringComponent: React.FC = () => {
           maxLength={11}
           isLimitText={true}
           id="string-input"
+          data-testid="string input"
           value={input}
         />
         <Button
+          data-testid="reverse btn"
           onClick={handleClick}
           text="Развернуть"
           disabled={input.length > 0 ? false : true}

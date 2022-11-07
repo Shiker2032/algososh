@@ -8,7 +8,9 @@ import { RadioInput } from "../ui/radio-input/radio-input"
 import { SolutionLayout } from "../ui/solution-layout/solution-layout"
 import styles from "./sorting-page.module.css"
 
-export const SortingPage: React.FC = () => {
+export const SortingPage: React.FC<{ initialArray?: Array<string | number> }> = ({
+  initialArray,
+}) => {
   const [selectedSort, setSelectedSort] = useState("selection")
   const [renderArray, setRenderArray] = React.useState<IQueueElement[]>([])
   const [ascLoading, setAscLoading] = useState(false)
@@ -17,7 +19,15 @@ export const SortingPage: React.FC = () => {
   const time = 750
 
   useEffect(() => {
-    setRenderArray([...prepareArray(1, 100)])
+    if (initialArray) {
+      const preparedArray: IQueueElement[] = []
+      initialArray.forEach((el, i) => {
+        preparedArray.push({ value: el, state: ElementStates.Default })
+      })
+      setRenderArray(preparedArray)
+    } else {
+      setRenderArray([...prepareArray(1, 100)])
+    }
   }, [])
 
   const prepareArray = (min: number, max: number) => {
@@ -43,6 +53,7 @@ export const SortingPage: React.FC = () => {
   }
 
   const bubbleSort = async (arr: IQueueElement[], sortingType: string) => {
+    if (renderArray.length < 2) return
     setInputDisabled(true)
     if (sortingType === "asc") {
       setAscLoading(true)
@@ -81,6 +92,7 @@ export const SortingPage: React.FC = () => {
   }
 
   const selectionSort = async (arr: IQueueElement[], sortingType: string) => {
+    if (renderArray.length < 2) return
     setInputDisabled(true)
     if (sortingType === "asc") {
       setAscLoading(true)
@@ -123,6 +135,7 @@ export const SortingPage: React.FC = () => {
         <div className={styles.inputs}>
           <div className={styles.radios}>
             <RadioInput
+              data-testid="selection-radio"
               name="rb"
               onChange={() => setSelectedSort("selection")}
               label="Выбором"
@@ -131,6 +144,7 @@ export const SortingPage: React.FC = () => {
               checked={selectedSort === "selection" ? true : false}
             />
             <RadioInput
+              data-testid="bubble-radio"
               name="rb"
               value="bubble"
               onChange={() => setSelectedSort("bubble")}
@@ -139,6 +153,7 @@ export const SortingPage: React.FC = () => {
             />
           </div>
           <Button
+            data-testid="asc-btn"
             text="По возрастанию"
             onClick={() => {
               handleSort(renderArray as IQueueElement[], "asc")
@@ -147,6 +162,7 @@ export const SortingPage: React.FC = () => {
             disabled={inputDisabled}
           />
           <Button
+            data-testid="desc-btn"
             text="По убыванию"
             onClick={() => {
               handleSort(renderArray as IQueueElement[], "desc")
@@ -156,6 +172,7 @@ export const SortingPage: React.FC = () => {
           />
           <div className={styles.generator}>
             <Button
+              data-testid="generate-btn"
               onClick={() => {
                 setRenderArray([...prepareArray(1, 100)])
               }}
@@ -164,8 +181,8 @@ export const SortingPage: React.FC = () => {
             />
           </div>
         </div>
-        <div className={styles.columns}>
-          {renderArray.length > 1 &&
+        <div data-testid="column-div" className={styles.columns}>
+          {renderArray.length > 0 &&
             renderArray.map((el, i) => {
               return <Column index={el.value as number} state={el.state} key={i} />
             })}
